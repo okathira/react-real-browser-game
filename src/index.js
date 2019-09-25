@@ -12,14 +12,29 @@ class CreateWindowButton extends React.Component {
   }
 }
 
-function Game() {
-  return (
-    <div className="game">
-      <section className="game-menu">
-        <CreateWindowButton />
-      </section>
-    </div>
-  );
+class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mainWindowHandle: undefined,
+    }
+  }
+
+  render() {
+    return (
+      <div className="game">
+        <div className="controller">
+          <CreateWindowButton />
+        </div>
+      </div>
+    );
+  }
+}
+
+function createWindow(url, windowName, windowFeatures) {
+  const windowHandle = window.open(url, windowName, windowFeatures);
+  windowHandle.resizeTo(50, 50);
+  return windowHandle;
 }
 
 ReactDOM.render(
