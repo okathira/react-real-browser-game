@@ -5,7 +5,7 @@ import './index.css';
 class CreateWindowButton extends React.Component {
   render() {
     return (
-      <button className="create-window">
+      <button className="create-window" onClick={this.props.onClick}>
         Create Window
       </button>
     )
@@ -20,11 +20,17 @@ class Game extends React.Component {
     }
   }
 
+  createMainWindow() {
+    this.setState({
+      mainWindowHandle: createWindow("", "_blank", "left=50,top=50,width=100,height=100,menubar=no,toolbar=no,location=no,status=no"),
+    });
+  }
+
   render() {
     return (
       <div className="game">
         <div className="controller">
-          <CreateWindowButton />
+          <CreateWindowButton onClick={() => this.createMainWindow()} />
         </div>
       </div>
     );
@@ -33,7 +39,6 @@ class Game extends React.Component {
 
 function createWindow(url, windowName, windowFeatures) {
   const windowHandle = window.open(url, windowName, windowFeatures);
-  windowHandle.resizeTo(50, 50);
   return windowHandle;
 }
 
