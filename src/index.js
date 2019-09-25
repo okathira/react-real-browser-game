@@ -4,7 +4,11 @@ import './index.css';
 
 function Game() {
   return (
-    <h1></h1>
+    <div className="game">
+      <div className="game-menu">
+        
+      </div>
+    </div>
   );
 }
 
