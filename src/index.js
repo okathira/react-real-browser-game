@@ -37,10 +37,47 @@ class Game extends React.Component {
   }
 }
 
+class KeyInputManager extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputKeys: new Array(128).fill(false),
+    };
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown);
+    document.addEventListener('keyup', this.onKeyUp);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
+    document.removeEventListener('keyup', this.onKeyUp);
+  }
+
+  onKeyDown(event) {
+    let crntInputKeys = this.state.inputKeys;
+    crntInputKeys[event.keyCode] = true;
+    this.setState({
+      inputKeys: crntInputKeys,
+    })
+  }
+
+  onKeyUp(event) {
+    let crntInputKeys = this.state.inputKeys;
+    crntInputKeys[event.keyCode] = false;
+    this.setState({
+      inputKeys: crntInputKeys,
+    })
+  }
+}
+
 function createWindow(url, windowName, windowFeatures) {
   const windowHandle = window.open(url, windowName, windowFeatures);
   return windowHandle;
 }
+
+
 
 ReactDOM.render(
   <Game />,
