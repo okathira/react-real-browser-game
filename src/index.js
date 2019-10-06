@@ -79,6 +79,7 @@ class Game extends React.Component {
     }
     this.createMainWindow = this.createMainWindow.bind(this);
     this.refreshKeyInput = this.refreshKeyInput.bind(this);
+    this.controlChildWindow = this.controlChildWindow.bind(this);
   }
 
   refreshKeyInput(keyCode, isDown) {
@@ -94,6 +95,26 @@ class Game extends React.Component {
     });
   }
 
+  controlChildWindow() {
+    if (this.state.childWindowHandle) {
+      if (this.state.keyInputs[38]) { // up
+        this.state.childWindowHandle.moveBy(0, -5);
+      }
+
+      if (this.state.keyInputs[40]) { // down
+        this.state.childWindowHandle.moveBy(0, 5);
+      }
+
+      if (this.state.keyInputs[37]) { // left
+        this.state.childWindowHandle.moveBy(-5, 0);
+      }
+
+      if (this.state.keyInputs[39]) { // right
+        this.state.childWindowHandle.moveBy(5, 0);
+      }
+    }
+  }
+
   render() {
     return (
       <div className="game">
@@ -101,6 +122,7 @@ class Game extends React.Component {
           <CreateWindowButton onClick={this.createMainWindow} />
         </div>
         <KeyInputManager refreshKeyInput={this.refreshKeyInput} />
+        <FpsManager frameUpdateFunction={this.controlChildWindow} />
       </div>
     );
   }
