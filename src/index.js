@@ -76,6 +76,7 @@ class Game extends React.Component {
     this.state = {
       childWindowHandle: undefined,
       keyInputs: Array(256).fill(false),
+      moveSpeed: 4,
     }
     this.createMainWindow = this.createMainWindow.bind(this);
     this.refreshKeyInput = this.refreshKeyInput.bind(this);
@@ -98,19 +99,19 @@ class Game extends React.Component {
   controlChildWindow() {
     if (this.state.childWindowHandle) {
       if (this.state.keyInputs[38]) { // up
-        this.state.childWindowHandle.moveBy(0, -5);
+        this.state.childWindowHandle.moveBy(0, -this.state.moveSpeed);
       }
 
       if (this.state.keyInputs[40]) { // down
-        this.state.childWindowHandle.moveBy(0, 5);
+        this.state.childWindowHandle.moveBy(0, this.state.moveSpeed);
       }
 
       if (this.state.keyInputs[37]) { // left
-        this.state.childWindowHandle.moveBy(-5, 0);
+        this.state.childWindowHandle.moveBy(-this.state.moveSpeed, 0);
       }
 
       if (this.state.keyInputs[39]) { // right
-        this.state.childWindowHandle.moveBy(5, 0);
+        this.state.childWindowHandle.moveBy(this.state.moveSpeed, 0);
       }
     }
   }
