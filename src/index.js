@@ -12,41 +12,6 @@ class CreateWindowButton extends React.Component {
   }
 }
 
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mainWindowHandle: undefined,
-      keyInputs: Array(256).fill(false),
-    }
-    this.createMainWindow = this.createMainWindow.bind(this);
-    this.refreshKeyInput = this.refreshKeyInput.bind(this);
-  }
-
-  refreshKeyInput(keyCode, isDown) {
-    const keyInputs = this.state.keyInputs.slice();
-    keyInputs[keyCode] = isDown;
-    this.setState({ keyInputs: keyInputs });
-  }
-
-  createMainWindow() {
-    this.setState({
-      mainWindowHandle: createWindow("", "_blank", "left=50,top=50,width=100,height=100,menubar=no,toolbar=no,location=no,status=no"),
-    });
-  }
-
-  render() {
-    return (
-      <div className="game">
-        <div className="controller">
-          <CreateWindowButton onClick={this.createMainWindow} />
-        </div>
-        <KeyInputManager refreshKeyInput={this.refreshKeyInput} />
-      </div>
-    );
-  }
-}
-
 class KeyInputManager extends React.Component {
   constructor(props) {
     super(props);
@@ -82,6 +47,90 @@ class KeyInputManager extends React.Component {
       <h3>
         Latest Input: {this.state.latestInput.key} {this.state.latestInput.state}
       </h3>
+    );
+  }
+}
+
+class FpsManager extends React.Component {
+  componentDidMount() {
+    this.timerID = setInterval(() => this.frameUpdate(), 1000 / 60);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  frameUpdate() {
+    // フレームレートに合わせて実行
+    this.props.frameUpdateFunction();
+  }
+
+  render() {
+    return null;
+  }
+}
+
+class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      childWindowHandle: undefined,
+      keyInputs: Array(256).fill(false),
+      moveSpeed: 5,
+    }
+    this.createMainWindow = this.createMainWindow.bind(this);
+    this.refreshKeyInput = this.refreshKeyInput.bind(this);
+    this.controlChildWindow = this.controlChildWindow.bind(this);
+  }
+
+  refreshKeyInput(keyCode, isDown) {
+    const keyInputs = this.state.keyInputs.slice();
+    keyInputs[keyCode] = isDown;
+    this.setState({ keyInputs: keyInputs });
+  }
+
+  createMainWindow() {
+    this.setState({
+      childWindowHandle: createWindow("", "_blank",
+        "left=50,top=50,width=100,height=100,menubar=no,toolbar=no,location=no,status=no"),
+    });
+  }
+
+  controlChildWindow() {
+    if (this.state.childWindowHandle) {
+      let moveSpeedX = 0, moveSpeedY = 0;
+
+      if (this.state.keyInputs[38]) { // up
+        moveSpeedY -= this.state.moveSpeed;
+      }
+
+      if (this.state.keyInputs[40]) { // down
+        moveSpeedY += this.state.moveSpeed;
+      }
+
+      if (this.state.keyInputs[37]) { // left
+        moveSpeedX -= this.state.moveSpeed;
+      }
+
+      if (this.state.keyInputs[39]) { // right
+        moveSpeedX += this.state.moveSpeed;
+      }
+
+      if (moveSpeedX || moveSpeedY) {
+        this.state.childWindowHandle.moveBy(moveSpeedX, moveSpeedY);
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div className="game">
+        <div className="controller">
+          <CreateWindowButton onClick={this.createMainWindow} />
+        </div>
+        <KeyInputManager refreshKeyInput={this.refreshKeyInput} />
+        <FpsManager frameUpdateFunction={this.controlChildWindow} />
+      </div>
     );
   }
 }
