@@ -9,7 +9,7 @@
 /coverage
 
 # production
-# /build # comment out for Unubo
+/build
 
 # misc
 .DS_Store
